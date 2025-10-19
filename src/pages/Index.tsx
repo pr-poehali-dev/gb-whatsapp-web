@@ -23,8 +23,8 @@ interface User {
 interface Story {
   id: number;
   user_id: number;
-  image_url: string;
-  caption: string;
+  image_url?: string;
+  text: string;
   created_at: string;
   user?: User;
   views?: number;
@@ -128,8 +128,7 @@ export default function Index() {
       {
         id: 1,
         user_id: 1,
-        image_url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800',
-        caption: 'Новые функции уже скоро! 🎉',
+        text: 'Новые функции уже скоро! 🎉',
         created_at: new Date().toISOString(),
         views: 234,
         viewers: []
@@ -137,10 +136,25 @@ export default function Index() {
       {
         id: 2,
         user_id: 2,
-        image_url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800',
-        caption: 'Работаю над новым дизайном ✨',
+        text: 'Работаю над новым дизайном ✨',
         created_at: new Date().toISOString(),
         views: 156,
+        viewers: []
+      },
+      {
+        id: 3,
+        user_id: 3,
+        text: 'Запустил новый проект! Кто хочет протестировать? 🚀',
+        created_at: new Date(Date.now() - 3600000).toISOString(),
+        views: 89,
+        viewers: []
+      },
+      {
+        id: 4,
+        user_id: 4,
+        text: 'Сегодня отличная погода для фотосессии! ☀️📸',
+        created_at: new Date(Date.now() - 7200000).toISOString(),
+        views: 142,
         viewers: []
       }
     ];
@@ -408,7 +422,9 @@ export default function Index() {
                       <p className="text-sm text-muted-foreground">@{story.user.username}</p>
                     </div>
                   </div>
-                  <img src={story.image_url} alt="" className="w-full aspect-square object-cover" />
+                  <div className="p-6 min-h-[200px] flex items-center justify-center gradient-primary">
+                    <p className="text-white text-2xl font-bold text-center px-4">{story.text}</p>
+                  </div>
                   <div className="p-4">
                     <div className="flex items-center gap-4 mb-3">
                       <Button variant="ghost" size="sm" className="gap-2">
@@ -424,7 +440,6 @@ export default function Index() {
                         <span>Поделиться</span>
                       </Button>
                     </div>
-                    {story.caption && <p className="text-sm">{story.caption}</p>}
                     <p className="text-xs text-muted-foreground mt-2">{getTimeAgo(story.created_at)}</p>
                   </div>
                 </Card>
@@ -480,12 +495,8 @@ export default function Index() {
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label>Изображение (URL)</Label>
-                      <Input placeholder="https://example.com/image.jpg" />
-                    </div>
-                    <div>
-                      <Label>Описание</Label>
-                      <Textarea placeholder="Добавьте подпись..." />
+                      <Label>Текст истории</Label>
+                      <Textarea placeholder="Что у вас нового?" rows={4} />
                     </div>
                     <Button className="w-full gradient-primary text-white">Опубликовать</Button>
                   </div>
@@ -499,8 +510,8 @@ export default function Index() {
                   className="overflow-hidden cursor-pointer hover-scale"
                   onClick={() => setSelectedStory(story)}
                 >
-                  <div className="relative">
-                    <img src={story.image_url} alt="" className="w-full aspect-square object-cover" />
+                  <div className="relative aspect-square gradient-accent flex items-center justify-center p-6">
+                    <p className="text-white text-lg font-bold text-center line-clamp-6">{story.text}</p>
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                       <div className="flex items-center gap-2">
                         <Avatar className="h-8 w-8 border-2 border-white">
@@ -613,7 +624,9 @@ export default function Index() {
                   .filter(s => s.user_id === currentUser.id)
                   .map((story) => (
                     <Card key={story.id} className="overflow-hidden group relative">
-                      <img src={story.image_url} alt="" className="w-full aspect-square object-cover" />
+                      <div className="aspect-square gradient-primary flex items-center justify-center p-4">
+                        <p className="text-white font-bold text-center line-clamp-6">{story.text}</p>
+                      </div>
                       <Button
                         variant="destructive"
                         size="sm"
@@ -648,8 +661,9 @@ export default function Index() {
                   <p className="text-sm text-muted-foreground">{getTimeAgo(selectedStory.created_at)}</p>
                 </div>
               </div>
-              <img src={selectedStory.image_url} alt="" className="w-full rounded-lg mb-4" />
-              {selectedStory.caption && <p className="mb-4">{selectedStory.caption}</p>}
+              <div className="w-full aspect-video gradient-primary rounded-lg mb-4 flex items-center justify-center p-8">
+                <p className="text-white text-3xl font-bold text-center">{selectedStory.text}</p>
+              </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Icon name="Eye" size={16} />
                 <span className="text-sm">{selectedStory.views} просмотров</span>
