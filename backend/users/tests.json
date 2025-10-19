@@ -1,0 +1,16 @@
+{
+  "tests": [
+    {
+      "name": "Test get all users",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Test search users",
+      "method": "GET",
+      "path": "/?search=anna",
+      "expectedStatus": 200
+    }
+  ]
+}

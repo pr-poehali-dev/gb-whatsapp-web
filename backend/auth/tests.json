@@ -1,0 +1,21 @@
+{
+  "tests": [
+    {
+      "name": "Test user login with new account",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "login",
+        "email": "test@example.com",
+        "password": "test123"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "user": {
+          "email": "string"
+        }
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

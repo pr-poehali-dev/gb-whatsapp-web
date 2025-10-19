@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "Test get all stories",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Test create story",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "create",
+        "user_id": 1,
+        "image_url": "https://example.com/image.jpg",
+        "caption": "Test story"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "story": {
+          "image_url": "string"
+        }
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
