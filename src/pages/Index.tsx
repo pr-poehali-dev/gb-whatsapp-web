@@ -59,6 +59,22 @@ export default function Index() {
   useEffect(() => {
     loadUsers();
     loadStories();
+    
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      try {
+        const user = JSON.parse(savedUser);
+        setCurrentUser(user);
+        setProfileForm({
+          display_name: user.display_name,
+          username: user.username,
+          bio: user.bio,
+          avatar_url: user.avatar_url
+        });
+      } catch (e) {
+        localStorage.removeItem('currentUser');
+      }
+    }
   }, []);
 
   const loadUsers = async () => {
@@ -133,13 +149,15 @@ export default function Index() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentUser(users[0]);
+    const user = users[0];
+    setCurrentUser(user);
     setProfileForm({
-      display_name: users[0].display_name,
-      username: users[0].username,
-      bio: users[0].bio,
-      avatar_url: users[0].avatar_url
+      display_name: user.display_name,
+      username: user.username,
+      bio: user.bio,
+      avatar_url: user.avatar_url
     });
+    localStorage.setItem('currentUser', JSON.stringify(user));
   };
 
   const handleRegister = (e: React.FormEvent) => {
@@ -162,6 +180,7 @@ export default function Index() {
       bio: newUser.bio,
       avatar_url: newUser.avatar_url
     });
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
   };
 
   const handleUpdateProfile = () => {
@@ -170,6 +189,7 @@ export default function Index() {
       setCurrentUser(updatedUser);
       setUsers(users.map(u => u.id === currentUser.id ? updatedUser : u));
       setEditProfile(false);
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
     }
   };
 
@@ -574,7 +594,10 @@ export default function Index() {
                         </div>
                       </DialogContent>
                     </Dialog>
-                    <Button variant="outline" onClick={() => setCurrentUser(null)}>
+                    <Button variant="outline" onClick={() => {
+                      setCurrentUser(null);
+                      localStorage.removeItem('currentUser');
+                    }}>
                       <Icon name="LogOut" size={16} className="mr-2" />
                       Выйти
                     </Button>
